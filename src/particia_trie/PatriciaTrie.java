@@ -66,6 +66,7 @@ public class PatriciaTrie {
 	    
 	}
 	
+
 	private  String findCommonPrefix(String str1, String str2) {
 	    int minLength = Math.min(str1.length(), str2.length());
 	    int i = 0;
