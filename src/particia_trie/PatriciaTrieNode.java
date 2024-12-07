@@ -9,11 +9,19 @@ public class PatriciaTrieNode {
 	//pour faciliter la conversion de fichier json vers arbre
 	@JsonProperty("label")
 	String label;
+	
 	@JsonProperty("isEndOfWord")
 	boolean isEndOfWord;
+	
 	@JsonProperty("children")
-
 	Map<Character, PatriciaTrieNode> children;
+	
+	
+	public PatriciaTrieNode() {
+        this.label = "";
+        this.isEndOfWord = false;
+        this.children = new HashMap<>();
+    }
 	
 	PatriciaTrieNode(String label) {
         this.label = label;

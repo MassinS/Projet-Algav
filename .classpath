@@ -6,17 +6,17 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/DELL/Downloads/jackson-core-2.18.1.jar">
+	<classpathentry kind="lib" path="C:/Users/DELL/eclipse-workspace/Projet_Algav/jackson-annotations-2.18.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/DELL/Downloads/jackson-annotations-2.18.1.jar">
+	<classpathentry kind="lib" path="C:/Users/DELL/eclipse-workspace/Projet_Algav/jackson-core-2.18.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/DELL/Downloads/jackson-databind-2.18.1.jar">
+	<classpathentry kind="lib" path="C:/Users/DELL/eclipse-workspace/Projet_Algav/jackson-databind-2.18.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
