@@ -12,12 +12,12 @@ if [ "$x" -eq 0 ]; then
 javac -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/particia_trie/PatriciaTrieNode.java
 javac -cp src  src/particia_trie/PatriciaTrie.java
 javac -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/particia_trie/fusion_pat.java
-java -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/particia_trie/fusion_pat.java "$y" "$z"
+java -Xss10m -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/particia_trie/fusion_pat.java "$y" "$z"
 elif [ "$x" -eq 1 ]; then
 javac -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/com/Hybrides/Noeud.java
 javac -cp src  src/com/Hybrides/Tries_Hybrides.java
 javac -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/com/Hybrides/fusion_hyb.java
-java -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/com/Hybrides/fusion_hyb.java "$y" "$z"
+java -Xss10m -cp src:jackson-annotations-2.18.1.jar:jackson-core-2.18.1.jar:jackson-databind-2.18.1.jar  src/com/Hybrides/fusion_hyb.java "$y" "$z"
 else
 echo " Error : x must be 0 or 1"
 exit 1

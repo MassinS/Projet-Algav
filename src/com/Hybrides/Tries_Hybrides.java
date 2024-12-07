@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jfree.data.xy.XYSeries;
+
 
 public class Tries_Hybrides {
 //---------------------------Question 1.4 ---------------------------------
@@ -149,7 +151,28 @@ public class Tries_Hybrides {
 	    return ajout_successif(mots, arbre);
 	}
 //---------------------------Question 2.6 ---------------------------------
-	
+	/*
+	1-Dans le pire des cas : 2L
+    -Recherche complète pour chaque caractère :
+
+    Lorsqu'un caractère est absent ou mal placé, le parcours peut nécessiter jusqu’à 2 comparaisons par caractère :
+    Une pour comparer dans l'arbre left ou right.
+    Une autre pour passer dans l'arbre middle.
+
+    -Nombre total de comparaisons :
+    Si le mot a L caractères, et qu’on effectue jusqu’à 2 comparaisons pour chaque caractère dans un parcours complet, le total est 
+    2L comparaisons.
+    
+    2-Dans le moyen des cas :L+log(n)
+    -L : Comparaisons pour traverser les caractères de la clé
+    Lors de la recherche ou de l'insertion d'une clé, chaque caractère de la clé doit être comparé pour déterminer si on continue dans le sous-arbre left, middle, ou right.
+    Cela nécessite une comparaison par caractère pour les L caractères de la clé.
+
+   -logn : Comparaisons pour localiser un nœud dans une structure binaire
+    Le Trie Hybride est composé de sous-arbres qui suivent la logique des arbres binaires de recherche.
+    Pour localiser un nœud (caractère) dans un sous-arbre, en moyenne, cela nécessite 
+    logn comparaisons, où n est le nombre total de clés stockées dans le Trie.
+	 */
 	public boolean Recherche(Noeud arbre,String mot) {
 		if(EstVide(arbre)) {
 				return false;
@@ -178,6 +201,11 @@ public class Tries_Hybrides {
 			}
 		}
 	}
+	/*
+	 La complexité de cette fonction est linéaire par rapport au nombre de nœuds de l'arbre, soit O(n).
+     Justification: Chaque nœud est visité une fois et une seule, et pour chaque nœud,
+     on effectue un nombre constant d'opérations (comparaison avec null, incrémentation du compteur, appels récursifs).
+	 */
 	public int Comptage(Noeud arbre) {
 		if(EstVide(arbre)) {
 			return 0;
@@ -191,6 +219,12 @@ public class Tries_Hybrides {
 			return compte+Comptage(Inf(arbre))+Comptage(Eq(arbre))+Comptage(Sup(arbre));
 		}
 	}
+	/*
+	 la complexité en nombre de comparaisons est O(n), où est le nombre total de nœuds dans l'arbre
+	 Comme la fonction parcourt tous les nœuds de l'arbre, chaque nœud est vérifié une fois avec Val(arbre).
+     Si l'arbre contient n nœuds, alors il y aura exactement n appels à Val(arbre).
+	 
+	 */
 	public List<String> ListeMots(Noeud arbre,String prefix) {
 	    List<String> mots = new ArrayList<>();
 	    if (EstVide(arbre)) {
@@ -207,6 +241,11 @@ public class Tries_Hybrides {
 	        return mots;
 	    
 	}
+	/*
+	 la complexité en nombre de comparaisons est O(n), où est le nombre total de nœuds dans l'arbre
+	 car on doit visiter toujours tous les noeuds de l'arbre s'il est vide on retourne un 1 sinon on continue jusqu'a ce que
+	 on atteint le nil d'un sous arbre donc on est oblige de parcourir tous les noeud et faire n comparaison.
+	 */
 	public int ComptageNil(Noeud arbre) {
 		if(EstVide(arbre)) {
 			return 1;
@@ -214,6 +253,10 @@ public class Tries_Hybrides {
 			return ComptageNil(Inf(arbre))+ComptageNil(Eq(arbre))+ComptageNil(Sup(arbre));
 		}
 	}
+	/*
+	 En termes de comparaisons, la complexité est proportionnelle au nombre de nœuds  dans l'arbre.
+     La complexité est donc O(n), car chaque nœud est visité une seule fois, et chaque nœud nécessite un nombre constant de comparaisons.
+	 */
 	public int Hauteur(Noeud arbre) {
 		if(EstVide(arbre)) {
 			return 0;
@@ -221,6 +264,12 @@ public class Tries_Hybrides {
 			return 1+Math.max(Math.max(Hauteur(Inf(arbre)), Hauteur(Eq(arbre))), Hauteur(Sup(arbre)));
 		}
 	}
+	/*
+	 En termes de comparaisons, la complexité est proportionnelle au nombre de nœuds  dans l'arbre.
+	 Chaque nœud est visité une fois: La récursivité assure que chaque nœud est visité une fois et une seule.
+     Traitement constant par nœud: Pour chaque nœud, les opérations effectuées (test si c'est une feuille, incrémentation de la profondeur, appels récursifs) prennent un temps constant.
+     Nombre d'appels récursifs: Le nombre d'appels récursifs est égal au nombre de nœuds de l'arbre
+	 */
 	public int somme_profondeur_feuilles(Noeud arbre, int profondeur) {
 	    if (EstVide(arbre)) {
 	        return 0;
@@ -232,6 +281,11 @@ public class Tries_Hybrides {
 	               somme_profondeur_feuilles(Sup(arbre), profondeur + 1);
 	    }
 	}
+	/*
+	 puisque la complexite de profondeurMoyenne depend de la complexité des deux fonction somme_profondeur_feuilles
+	 et ComptageFeuilles qui ont une complexite de O(N) en terme de comparaison ou N est le nombres des noeud dans l'arbre donc on peut 
+	 deduire que la complexite de cette fonction son ordre de grandeur est O(N) 
+	 */
 	public int ProfondeurMoyenne(Noeud arbre) {
 	    if (EstVide(arbre)) {
 	        return 0;
@@ -241,6 +295,10 @@ public class Tries_Hybrides {
 	        return somme / nbFeuilles;
 	    }
 	}
+	/*
+	 La complexité en nombre de comparaisons de la fonction nbr_end_word est linéaire, soit O(n), où n est le nombre de nœuds dans le Trie.
+	 pourquoi O(N) car chaque nœud est visité une fois: La récursivité assure que chaque nœud est visité une fois et une seule.
+	 */
 	public int nbr_end_word(Noeud arbre) {
 		if(EstVide(arbre)) {
 			return 0;
@@ -256,7 +314,12 @@ public class Tries_Hybrides {
 	 * le nombre de mots dont le prefix est le mot en question
 	 * /
 	 */
-	
+	/*
+	 ici dans le pire des cas c'est O(2L + log n) ou  2L (2 fois le nb max de caractères d’une clé)
+     comparaisons et log(n) c'est par rapport au fonction nbr_end_word qui va prendre un seul chemin parmi les 3 du coup
+     log(n) ou n represente le nombre de noeud car on doit faire tjr une compraraison a chaque noeud pour savoir s'il s'agit la fin d'un
+     mot et on doit verifier ca pour tous les noeuds.
+	 */
 	public int Prefix(Noeud arbre,String mot) {
 		if(EstVide(arbre)) {
 			return 0;
@@ -285,6 +348,11 @@ public class Tries_Hybrides {
 			}
 		}
 	}
+	/*
+	 Dans le pire des cas, on doit parcourir tout le sous-arbre droit jusqu'à trouver la position d'insertion.
+	 Cela implique de visiter tous les nœuds du sous-arbre droit, ce qui correspond à une complexité en O(h), 
+	 où h est la hauteur de l'arbre.
+	 */
 	public Noeud bon_emplacement_sup(Noeud arbre,Noeud a_rajouter) {
 		if(EstVide(arbre)) {
 			return a_rajouter;
@@ -292,7 +360,11 @@ public class Tries_Hybrides {
 			return new Noeud(Rac(arbre), Inf(arbre), Eq(arbre), bon_emplacement_sup(Sup(arbre), a_rajouter), Val(arbre));
 		}
 	}
-	
+	/*
+	 la complexite ici O(L^2) car on une fonction recherche qui est appeler toujours avec la taille du mot -1 donc en premier temps
+	 on aura 2*L puis 2*(L-1) puis 2*(L-2) ...... 2*(L-(L-1)) donc on aura 2(L*(L-1)/2) =O(L^2).on pris la complexite de la fonction
+	 rechercher car c'est la fonction qui a une grande complexite par rapport aux autre comme prefix .. ect  
+	 */
 	public Noeud Suppression(Noeud arbre,String mot) {
 		if(EstVide(arbre)) {
 			 return arbre;
@@ -344,16 +416,65 @@ public class Tries_Hybrides {
 	    Noeud arbre = Suppression(courant,mot);
 	    return suppression_successif(mots, arbre);
 	}
+	/*
+	 la complexite de cette fonction est O(N*2*L) ou N represente la taille de la liste mots ou en d'autre terme le nombre de mots
+	 dans l'arbre 2 et L le nombre max de caractères d’une clé ou un mot
+	 */
 	public Noeud fusion(Noeud arbre1,Noeud arbre2) {
-		List<String> mots=ListeMots(arbre2, "");
-		Noeud arbre=ajout_successif(mots, arbre1);
-		return arbre;
+		Noeud arbre=new Noeud();
+		if(EstVide(arbre1)) {
+			return arbre2;
+		}else if(EstVide(arbre2)) {
+			return arbre1;
+		}else {
+			List<String> mots1=ListeMots(arbre1, "");
+			int mots_arbre1=mots1.size();
+			List<String> mots2=ListeMots(arbre2, "");
+			int mots_arbre2=mots2.size();
+			if(mots_arbre1<=mots_arbre2) {
+				arbre=ajout_successif(mots1, arbre2);
+			}else {
+				arbre=ajout_successif(mots2, arbre1);
+			}
+			
+			return arbre;
+		}
+		
 	}
 //---------------------------Question 3.8 ---------------------------------
-	
+	public Noeud RG(Noeud arbre) {
+		return null;
+	}
+	public Noeud RD(Noeud arbre) {
+		return null;
+	}
+	public Noeud RGG(Noeud arbre) {
+		return null;
+	}
+	public Noeud RDD(Noeud arbre) {
+		return null;
+	}
+	public Noeud RDG(Noeud arbre) {
+		return null;
+	}
+	public Noeud RGD(Noeud arbre) {
+		return null;
+	}
 	
 	public static void main(String[] args)  {
-	   
+		Tries_Hybrides tt=new Tries_Hybrides();
+		 List<String> mots1;
+        try {
+        	mots1 = tt.lireEtDecomposerFichier("mots.txt");
+        	int anis=mots1.size();
+            Noeud nn=tt.ajout_successif(mots1, null);
+	        System.out.println(anis);
+	        
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 
     }
 	
