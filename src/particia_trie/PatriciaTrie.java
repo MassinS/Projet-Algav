@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.Hybrides.Noeud;
+
 public class PatriciaTrie {
 	/*
   1- Boucle principale et appels récursifs :
@@ -104,10 +106,6 @@ public class PatriciaTrie {
 	}
 	
 	
-	
-	// Afficher tout les mots de l'arbre 
-	// l'idée ici est d'entrer une chaine de caractere et chaque label qu'on croise on concatene
-	// lorsque j'arrive au moment où isEndOfWord est true ici je peux afficher le mot car il est complet
 	public void AfficherLesMots(PatriciaTrieNode node, String prefix) {
         if (node.isEndOfWord) {
             System.out.println(prefix + node.label);
@@ -116,31 +114,27 @@ public class PatriciaTrie {
         	AfficherLesMots(entry.getValue(), prefix + node.label);
         }
     }
-
+    
 	
-	/*
-	 La fonction parcourt l'intégralité de l'arbre pour compter les nœuds marqués comme fin de mot.
-	 Complexité temporelle : O(n), car chaque nœud est visité une fois.
-	 */
+	
 	public Integer ComptageMots(PatriciaTrieNode node) {
 	   int i=0;
-	   
-		if ( node.isEndOfWord) {
-		 i++;
-		} 
+	   if(node!=null) {
+		   if ( node.isEndOfWord) {
+				 i++;
+				}
+		   for (Map.Entry<Character, PatriciaTrieNode> entry : node.children.entrySet()) {
+		        i += ComptageMots(entry.getValue());
+		    }
+	   }
+		 
 			
-		for (Map.Entry<Character, PatriciaTrieNode> entry : node.children.entrySet()) {
-	        i += ComptageMots(entry.getValue());
-	    }
+		
 		return i;
 		
 	}
 	
 
-	/*
-      La complexité est : O(n)
-	  
-	*/
 	
 	public boolean Recherche(PatriciaTrieNode node, String word) {
 	    if (word.isEmpty()) {
@@ -167,10 +161,6 @@ public class PatriciaTrie {
 
     
 	
-	/*
-	 La fonction calcule la hauteur en explorant tous les chemins de l'arbre.
-	 O(n), car chaque nœud est visité une fois.
-	 */
     public Integer Hauteur(PatriciaTrieNode node) {
 		
     	if (node == null || node.children.isEmpty()) {
@@ -187,7 +177,6 @@ public class PatriciaTrie {
     }
     
     
-  /* La complexité est de O(L) où L est la longeur de mot à supprimer */
     public PatriciaTrieNode Suppression(PatriciaTrieNode node, String word) {
         
     	 if (word.isEmpty()) {
@@ -218,42 +207,45 @@ public class PatriciaTrie {
     
     
 
-    /*
-    La fonction calcule la profondeur pour chaque mot (parcours complet) et divise par le nombre de mots.
-    O(n), car chaque nœud est visité une fois
-    */
+    
     
     public Integer ProfondeurMoyenne(PatriciaTrieNode node) {
-    	return profondeurTotale(node,0)/ComptageMots(node);
-    }
+    	if(ComptageMots(node)==0) {
+    		return 0;
+    	}else {
+    		return profondeurTotale(node,0)/ComptageMots(node);
+        }
+    	}
+    	
     
     
    private Integer profondeurTotale(PatriciaTrieNode node, Integer profondeurActuelle) {
-	
+
 	   
 	   int profondeurTotale = 0;
 
 	    // Ajouter la profondeur actuelle si le nœud est la fin d'un mot
-	    if (node.isEndOfWord) {
-	        profondeurTotale += profondeurActuelle;
-	    }
+	   if(node!=null) {
+		   if (node.isEndOfWord) {
+		        profondeurTotale += profondeurActuelle;
+		    }
+		// Parcourir les enfants
+		    for (Map.Entry<Character, PatriciaTrieNode> entry : node.children.entrySet()) {
+		        profondeurTotale += profondeurTotale(
+		            entry.getValue(), 
+		            profondeurActuelle + entry.getValue().label.length()
+		        );
+		    }
+	   }
+	    
 
-	    // Parcourir les enfants
-	    for (Map.Entry<Character, PatriciaTrieNode> entry : node.children.entrySet()) {
-	        profondeurTotale += profondeurTotale(
-	            entry.getValue(), 
-	            profondeurActuelle + entry.getValue().label.length()
-	        );
-	    }
+	    
 
 	    return profondeurTotale;
 	 		
    }
    
-   /*
-    La fonction vérifie pour chaque nœud si ses enfants sont vides, ce qui nécessite un parcours complet
-    O(n), car chaque nœud est visité une fois
-    */
+   
    public Integer ComptageNil( PatriciaTrieNode node ) {
 	   
 	   int i=0;
@@ -269,15 +261,18 @@ public class PatriciaTrie {
 		
 		
    }
-   
-   /*
-       Complexité: O(N) 
-    */
+  
    
    public List<String> ListeMots(PatriciaTrieNode Arbre) {
 	    List<String> mots = new ArrayList<>();
+	    if (Arbre != null) {
+	    	
+	    
 	    ListeMotsRecursive(Arbre, "", mots);
 	    return mots;
+	    } else {
+	    	return mots;
+	    }
 	}
 
 	private void ListeMotsRecursive(PatriciaTrieNode Arbre, String prefix, List<String> mots) {
@@ -338,36 +333,7 @@ public class PatriciaTrie {
 
 	    return count;
 	}
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public PatriciaTrieNode FusionArbre ( PatriciaTrieNode Arbre1, PatriciaTrieNode Arbre2  ) {
@@ -418,33 +384,21 @@ public class PatriciaTrie {
 	
 	
 	
-	/* La complexité est mesuré par :  
-	
-	 
-	 la complexité d'une insertion d'un mot est de : O(L) où L est la longeur de mot à insèrer 
-	 et le d est la profondeur de l'arbre
-	 donc si on aura plusieurs mots à insèrer donc 
-	 on aura L1,L2,L3.....Li
-	 donc la complexité sera : La somme de (Li) de 1 jusqu'a m où m est le nombre de mot à insèrer.
-	 
-	 */
 	
 	public PatriciaTrieNode ajout_successif( PatriciaTrieNode Arbre1, List<String> Liste  ) {
-		
-		 for (String element : Liste) { 
-		 insert(Arbre1, element);   
-		 }
-		 return Arbre1;
+	
+		 if (Liste.isEmpty()) {
+		        return Arbre1; // Si la liste est vide, on retourne l'arbre construit
+		    }
+
+		    String mot = Liste.get(0);
+		    Liste.remove(0); // On supprime le premier element de la liste
+		     insert(Arbre1,mot);
+		    return ajout_successif(Arbre1,Liste);
 	
 	}
 	  
 	
-	/*
-	 La complexité est mesuré par :
-	 - La complexité de suppression d'un mot est : O(L) où L est la taille de mot à supprimer 
-	 donc la complexité totale sera : la somme de Li de 1 jusqu'a m où m est le nombre de mot à supprimer
-	 
-	 */
 	public PatriciaTrieNode Suppression_successif(PatriciaTrieNode Arbre1 , List<String> Liste   ) {
 	
 		 for (String element : Liste) {

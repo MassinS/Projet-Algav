@@ -86,7 +86,9 @@ public class Tries_Hybrides {
 		return A.isEndOfWord;
 	}
 	public boolean EstFeuille(Noeud arbre) {
-		 if(Val(arbre) && EstVide(Inf(arbre)) &&EstVide(Eq(arbre)) && EstVide(Sup(arbre))) {
+		if(EstVide(arbre)) {
+			return false;
+		}else if(Val(arbre) && EstVide(Inf(arbre)) &&EstVide(Eq(arbre)) && EstVide(Sup(arbre))) {
 			return true;
 		}else {
 			return false;

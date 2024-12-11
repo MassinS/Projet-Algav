@@ -23,10 +23,12 @@ public class PatriciaTrieNode {
         this.children = new HashMap<>();
     }
 	
-	PatriciaTrieNode(String label) {
+	
+	public PatriciaTrieNode(String label) {
         this.label = label;
         this.isEndOfWord = false;
         this.children = new HashMap<>();
     }	
 
+	
 }
