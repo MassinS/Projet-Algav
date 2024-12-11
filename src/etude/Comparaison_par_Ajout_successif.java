@@ -40,9 +40,7 @@ public class Comparaison_par_Ajout_successif {
 		 
 		 List<String> mots1;
 		 
-			Noeud hybride = new Noeud();
-        	PatriciaTrieNode root = new PatriciaTrieNode("");
-        
+		
 		 // Créer un objet File pour le répertoire
         File dossier = new File(cheminRepertoire);
 
@@ -57,19 +55,28 @@ public class Comparaison_par_Ajout_successif {
                 for (File fichier : fichiers) {
                 	try {
                 		
+                		Noeud hybride = new Noeud();
+                    	PatriciaTrieNode root = new PatriciaTrieNode("");
+                    
+                		
+                		
         				mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
         				int y=mots1.size();
+        		
         				
         				long startTimeHybride = System.nanoTime();
                         hybride = tt.ajout_successif(mots1, hybride);
                         long endTimeHybride = System.nanoTime();
                         long durationHybride = endTimeHybride - startTimeHybride;
                         
-                        seriesHybride.add(durationHybride / 1_000_000.0, y);
+                        seriesHybride.add( y, durationHybride / 1_000_000.0);
                         
-                        
+                      
+                       
+         				
                         mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
-    					
+        				
+                        
                         long startTimePatricia = System.nanoTime();
                         
                         root = trie.ajout_successif(root, mots1);
@@ -79,13 +86,17 @@ public class Comparaison_par_Ajout_successif {
                         long durationPatricia = endTimePatricia - startTimePatricia;
                         
                         
-                        seriesPatricia.add(durationPatricia / 1_000_000.0, y);
+                        seriesPatricia.add( y, durationPatricia / 1_000_000.0);
         		        
         		        
         		     
         			} catch (IOException e) {
         				e.printStackTrace();
         			}
+                	
+               
+                	
+                	
                 }
             } else {
                 System.out.println("Le répertoire est vide ou inaccessible.");
@@ -94,62 +105,41 @@ public class Comparaison_par_Ajout_successif {
             System.out.println("Le chemin spécifié n'est pas un répertoire valide.");
         }
         
-        System.out.println(trie.Hauteur(root));
-        
         
         
         // Ajouter les séries à une collection
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(seriesPatricia);
-        
-        // Ajouter les séries à une collection
-        XYSeriesCollection dataset1 = new XYSeriesCollection();
-        dataset1.addSeries(seriesHybride);
-        
+        dataset.addSeries(seriesHybride);
+       
         
         
         // Créer le graphique
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "l'insertion dans la structure patricia", // Titre
+                "l'insertion dans la structure patricia et hybride", // Titre
                 "Temps d'exécution (en millisecondes)", // Axe X
                 "Nombre de mots", // Axe Y
                 dataset // Données
         );
 
-        
-        JFreeChart chart1 = ChartFactory.createXYLineChart(
-                "l'insertion dans la structure hybride", // Titre
-                "Temps d'exécution (en millisecondes)", // Axe X
-                "Nombre de mots", // Axe Y
-                dataset1 // Données
-        );
+     
         
         
         // La couleur Blue pour l'arbre Patricia.
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.getRenderer().setSeriesPaint(0, Color.BLUE); // Hybride
+        plot.getRenderer().setSeriesPaint(1, Color.RED); // Hybride
         
-        
-        // La couleur rouge pour l'arbre Hybride.
-        XYPlot plot1 = (XYPlot) chart1.getPlot();
-        plot1.getRenderer().setSeriesPaint(0, Color.RED); // Hybride
-        
+       
         
         // Afficher le graphique dans une fenêtre Swing
-        JFrame frame = new JFrame("Le graphe pour un arbre patricia.");
+        JFrame frame = new JFrame("Le graphe de comparaison pour l'arbre patricia et hybride .");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new ChartPanel(chart));
         frame.pack();
         frame.setVisible(true);
 
-        
-        // Afficher le graphique dans une fenêtre Swing
-        JFrame frame1 = new JFrame("Le graphe pour un arbre hybride.");
-        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame1.add(new ChartPanel(chart1));
-        frame1.pack();
-        frame1.setVisible(true);
-          
+     
         
 	}
 
