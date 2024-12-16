@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jfree.data.xy.XYSeries;
+import org.w3c.dom.Node;
+
+import particia_trie.PatriciaTrieNode;
 
 
 public class Tries_Hybrides {
@@ -36,15 +39,13 @@ public class Tries_Hybrides {
 	            return new Noeud(Rac(courant), TH_Ajout(cle, Inf(courant)), Eq(courant), Sup(courant), Val(courant));
 	        }
 
-	        // Comparaison 2 : p > Rac(courant)
-	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	        
 	        if (p > Rac(courant)) {
 	            return new Noeud(Rac(courant), Inf(courant), Eq(courant), TH_Ajout(cle, Sup(courant)), Val(courant));
+	        }else {
+	        	return new Noeud(Rac(courant), Inf(courant), TH_Ajout(cle.substring(1), Eq(courant)), Sup(courant), Val(courant));
 	        }
-
-	        // Comparaison 3 : p == Rac(courant)
-	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
-	        return new Noeud(Rac(courant), Inf(courant), TH_Ajout(cle.substring(1), Eq(courant)), Sup(courant), Val(courant));
+	        
 	    }
 	}
 
@@ -189,34 +190,34 @@ public class Tries_Hybrides {
     Pour localiser un nœud (caractère) dans un sous-arbre, en moyenne, cela nécessite 
     logn comparaisons, où n est le nombre total de clés stockées dans le Trie.
 	 */
-	public boolean Recherche(Noeud arbre,String mot) {
-		if(EstVide(arbre)) {
-				return false;
-		}else {
-			if(mot.length()==1) {
-				if(mot.charAt(0)<Rac(arbre)) {
-					return Recherche(Inf(arbre), mot);
-				}else if(mot.charAt(0)>Rac(arbre)) {
-					return Recherche(Sup(arbre), mot);
-				}else {
-					if(Val(arbre)) {
-						return true;	
-					}else {
-						return false;
-					}
-				}
-			}else {
-				char p=mot.charAt(0);
-				if(p<Rac(arbre)) {
-					return Recherche(Inf(arbre), mot);
-				}else if(p>Rac(arbre)) {
-					return Recherche(Sup(arbre), mot);
-				}else {
-					return Recherche(Eq(arbre), mot.substring(1));
-				}
-			}
-		}
+	public boolean Recherche(Noeud arbre, String mot) {
+	    if (EstVide(arbre)) {
+	        return false;
+	    } else {
+	        if (mot.length() == 1) {
+	            char c = mot.charAt(0);
+	            Noeud.incrementCompteur();  
+	            if (c < Rac(arbre)) {
+	                return Recherche(Inf(arbre), mot);
+	            } else if (c > Rac(arbre)) {
+	                return Recherche(Sup(arbre), mot);
+	            } else {
+	                return Val(arbre); 
+	            }
+	        } else {
+	            char p = mot.charAt(0);
+	            Noeud.incrementCompteur();  
+	            if (p < Rac(arbre)) {
+	                return Recherche(Inf(arbre), mot);
+	            } else if (p > Rac(arbre)) {
+	                return Recherche(Sup(arbre), mot);
+	            } else {
+	                return Recherche(Eq(arbre), mot.substring(1));
+	            }
+	        }
+	    }
 	}
+
 	/*
 	 La complexité de cette fonction est linéaire par rapport au nombre de nœuds de l'arbre, soit O(n).
      Justification: Chaque nœud est visité une fois et une seule, et pour chaque nœud,
@@ -405,6 +406,7 @@ public class Tries_Hybrides {
 					  }
 					  }else {
 						  if(mot.length()==1) {
+							  Noeud.incrementCompteur();
 							  if(p<Rac(arbre)) {
 								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
 							  }else if(p>Rac(arbre)) {
@@ -414,6 +416,7 @@ public class Tries_Hybrides {
 							  }
 							  
 						  }else {
+							  Noeud.incrementCompteur();
 							  if(p<Rac(arbre)) {
 								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
 							  }else if(p>Rac(arbre)) {

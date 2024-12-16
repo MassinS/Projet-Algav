@@ -57,10 +57,11 @@ public class Hybride_trie_Encode_Shakespeare {
 				}
     		      
 				
-            	//  Hybride.TH_Ajout("Salut", root);
-            	
+				  System.out.println("Nombre de comparaison pour la construction de toute l'oeuvre de Sheakspeare : " + Noeud.getCompteur() );
+                
+				  
 				  Noeud.resetCompteur();
-            	  
+				
 				  long durationHybride = endTimeHybride - startTimeHybride;
                  
             	  long StartTimeAjout   = System.nanoTime();
@@ -70,21 +71,17 @@ public class Hybride_trie_Encode_Shakespeare {
               	  
             	  System.out.println("Nombre de comparaison pour ajouter le mot salut : " + Noeud.getCompteur() );
                   
-            	  long StartTimeHauteur   = System.nanoTime();
-              	  Hybride.Hauteur(root);
-              	  long EndTimeHauteur  = System.nanoTime();
-            	  long durationHauteur = EndTimeHauteur - StartTimeHauteur;
-              	  
             	  
-            	  System.out.println("Ajout total de Sheakspeare " + durationHybride / 1_000_000.0 + " ms");
-              	  System.out.println("Ajout de mot salut : " + durationAjout/ 1_000_000.0 + " ms");
-              	  System.out.println("L'hauteur : " + durationHauteur/ 1_000_000.0 + " ms");
-                 
+            	  System.out.println("Temps nécessaire pou l'ajout total de Sheakspeare " + durationHybride / 1_000_000.0 + " ms");
+              	  System.out.println("Temps nécessaire pou l'ajout de mot salut : " + durationAjout/ 1_000_000.0 + " ms");
+              	 
               	  System.out.println(Hybride.Hauteur(root));
               	  System.out.println(Hybride.ProfondeurMoyenne(root) );
                       
-              	  System.out.println("Nombre de comparaison : " + Noeud.getCompteur() );
-                  
+              	  Noeud.resetCompteur();
+              	  Hybride.Recherche(root, "measure");
+              	  System.out.println("Le nombre de comparaison dans la recherche du mot measure : " + Noeud.getCompteur() );
+              	  System.out.println(Hybride.Comptage(root) );
                   
 					
 					
