@@ -16,27 +16,38 @@ public class Tries_Hybrides {
 	
    Noeud racine;
    
-	public Noeud TH_Ajout(String cle,Noeud courant) {
-		if (cle.isEmpty()) {
+   public Noeud TH_Ajout(String cle, Noeud courant) {
+	    if (cle.isEmpty()) {
 	        return courant;
 	    }
-		if(EstVide(courant)) {
-		 if(cle.length() == 1) {
-			 return new Noeud(cle.charAt(0),TH_Vide(),TH_Vide(),TH_Vide(), true);
-		 }else {
-			 return new Noeud(cle.charAt(0),TH_Vide(),TH_Ajout(cle.substring(1), Eq(courant)),TH_Vide(),ValVide());
-		 }
-		}else {
-		  char p=cle.charAt(0);
-		  if(p<Rac(courant)) {
-			  return new Noeud(Rac(courant),TH_Ajout(cle, Inf(courant)),Eq(courant),Sup(courant),Val(courant));
-		  }else if(p>Rac(courant)) {
-			  return new Noeud(Rac(courant),Inf(courant),Eq(courant),TH_Ajout(cle, Sup(courant)),Val(courant));
-		  }else {
-			  return new Noeud(Rac(courant),Inf(courant),TH_Ajout(cle.substring(1), Eq(courant)),Sup(courant),Val(courant));
-		  }
-		}
+
+	    if (EstVide(courant)) {
+	        if (cle.length() == 1) {
+	            return new Noeud(cle.charAt(0), TH_Vide(), TH_Vide(), TH_Vide(), true);
+	        } else {
+	            return new Noeud(cle.charAt(0), TH_Vide(), TH_Ajout(cle.substring(1), Eq(courant)), TH_Vide(), ValVide());
+	        }
+	    } else {
+	        char p = cle.charAt(0);
+
+	        // Comparaison 1 : p < Rac(courant)
+	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	        if (p < Rac(courant)) {
+	            return new Noeud(Rac(courant), TH_Ajout(cle, Inf(courant)), Eq(courant), Sup(courant), Val(courant));
+	        }
+
+	        // Comparaison 2 : p > Rac(courant)
+	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	        if (p > Rac(courant)) {
+	            return new Noeud(Rac(courant), Inf(courant), Eq(courant), TH_Ajout(cle, Sup(courant)), Val(courant));
+	        }
+
+	        // Comparaison 3 : p == Rac(courant)
+	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	        return new Noeud(Rac(courant), Inf(courant), TH_Ajout(cle.substring(1), Eq(courant)), Sup(courant), Val(courant));
+	    }
 	}
+
 	
 		
 	public Noeud TH_Vide() {

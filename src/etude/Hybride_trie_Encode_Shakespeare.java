@@ -59,14 +59,17 @@ public class Hybride_trie_Encode_Shakespeare {
 				
             	//  Hybride.TH_Ajout("Salut", root);
             	
-            	  long durationHybride = endTimeHybride - startTimeHybride;
-                  
+				  Noeud.resetCompteur();
+            	  
+				  long durationHybride = endTimeHybride - startTimeHybride;
+                 
             	  long StartTimeAjout   = System.nanoTime();
               	  Hybride.TH_Ajout("salut", root);
               	  long EndTimeAjout   = System.nanoTime();
             	  long durationAjout = EndTimeAjout - StartTimeAjout;
               	  
-            	  
+            	  System.out.println("Nombre de comparaison pour ajouter le mot salut : " + Noeud.getCompteur() );
+                  
             	  long StartTimeHauteur   = System.nanoTime();
               	  Hybride.Hauteur(root);
               	  long EndTimeHauteur  = System.nanoTime();
@@ -80,7 +83,8 @@ public class Hybride_trie_Encode_Shakespeare {
               	  System.out.println(Hybride.Hauteur(root));
               	  System.out.println(Hybride.ProfondeurMoyenne(root) );
                       
-                
+              	  System.out.println("Nombre de comparaison : " + Noeud.getCompteur() );
+                  
                   
 					
 					
