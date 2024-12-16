@@ -86,8 +86,8 @@ public class Patricia_trie_Encode_Shakespeare {
               
 			  
 			  PatriciaTrieNode.resetCompteur();
-				trie.Suppression(root, "measure");
-				System.out.println("Le nombre de comparaison pour supprimer le mot measure : "+ PatriciaTrieNode.getCompteur() );
+			  trie.Suppression(root, "measure");
+			  System.out.println("Le nombre de comparaison pour supprimer le mot measure : "+ PatriciaTrieNode.getCompteur() );
 	              
 			  
             } 

@@ -9,6 +9,7 @@ import com.Hybrides.Tries_Hybrides;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import particia_trie.PatriciaTrie;
+import particia_trie.PatriciaTrieNode;
 
 public class Hybride_trie_Encode_Shakespeare {
 
@@ -81,7 +82,11 @@ public class Hybride_trie_Encode_Shakespeare {
               	  Noeud.resetCompteur();
               	  Hybride.Recherche(root, "measure");
               	  System.out.println("Le nombre de comparaison dans la recherche du mot measure : " + Noeud.getCompteur() );
-              	  System.out.println(Hybride.Comptage(root) );
+              	 
+              	  
+              	Noeud.resetCompteur();
+				Hybride.Suppression(root, "measure");
+				System.out.println("Le nombre de comparaison pour supprimer le mot measure : "+ Noeud.getCompteur() );
                   
 					
 					

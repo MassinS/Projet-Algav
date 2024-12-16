@@ -31,20 +31,17 @@ public class Tries_Hybrides {
 	            return new Noeud(cle.charAt(0), TH_Vide(), TH_Ajout(cle.substring(1), Eq(courant)), TH_Vide(), ValVide());
 	        }
 	    } else {
-	        char p = cle.charAt(0);
-
-	        // Comparaison 1 : p < Rac(courant)
-	        Noeud.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	        char p = cle.charAt(0); 
 	        if (p < Rac(courant)) {
+	        	Noeud.incrementCompteur();
 	            return new Noeud(Rac(courant), TH_Ajout(cle, Inf(courant)), Eq(courant), Sup(courant), Val(courant));
 	        }
-
-	        
 	        if (p > Rac(courant)) {
+	        	Noeud.incrementCompteur();
 	            return new Noeud(Rac(courant), Inf(courant), Eq(courant), TH_Ajout(cle, Sup(courant)), Val(courant));
-	        }else {
-	        	return new Noeud(Rac(courant), Inf(courant), TH_Ajout(cle.substring(1), Eq(courant)), Sup(courant), Val(courant));
 	        }
+	        return new Noeud(Rac(courant), Inf(courant), TH_Ajout(cle.substring(1), Eq(courant)), Sup(courant), Val(courant));
+	        
 	        
 	    }
 	}
@@ -195,25 +192,27 @@ public class Tries_Hybrides {
 	        return false;
 	    } else {
 	        if (mot.length() == 1) {
-	            char c = mot.charAt(0);
-	            Noeud.incrementCompteur();  
+	            char c = mot.charAt(0);  
 	            if (c < Rac(arbre)) {
+	            	Noeud.incrementCompteur();
 	                return Recherche(Inf(arbre), mot);
 	            } else if (c > Rac(arbre)) {
+	            	Noeud.incrementCompteur();
 	                return Recherche(Sup(arbre), mot);
-	            } else {
-	                return Val(arbre); 
 	            }
+	                return Val(arbre); 
+	            
 	        } else {
-	            char p = mot.charAt(0);
-	            Noeud.incrementCompteur();  
+	            char p = mot.charAt(0);  
 	            if (p < Rac(arbre)) {
+	            	Noeud.incrementCompteur();
 	                return Recherche(Inf(arbre), mot);
 	            } else if (p > Rac(arbre)) {
+	            	Noeud.incrementCompteur();
 	                return Recherche(Sup(arbre), mot);
-	            } else {
-	                return Recherche(Eq(arbre), mot.substring(1));
 	            }
+	                return Recherche(Eq(arbre), mot.substring(1));
+	            
 	        }
 	    }
 	}
@@ -343,8 +342,10 @@ public class Tries_Hybrides {
 		}else {
 			if(mot.length()==1) {
 				if(mot.charAt(0)<Rac(arbre)) {
+					Noeud.incrementCompteur();
 					return Prefix(Inf(arbre), mot);
 				}else if(mot.charAt(0)>Rac(arbre)) {
+					Noeud.incrementCompteur();
 					return Prefix(Sup(arbre), mot);
 				}else {
 					if(Val(arbre)) {
@@ -356,8 +357,10 @@ public class Tries_Hybrides {
 			}else {
 				char p=mot.charAt(0);
 				if(p<Rac(arbre)) {
+					Noeud.incrementCompteur();
 					return Prefix(Inf(arbre), mot);
 				}else if(p>Rac(arbre)) {
+					Noeud.incrementCompteur();
 					return Prefix(Sup(arbre), mot);
 				}else {
 					return Prefix(Eq(arbre), mot.substring(1));
@@ -377,60 +380,65 @@ public class Tries_Hybrides {
 			return new Noeud(Rac(arbre), Inf(arbre), Eq(arbre), bon_emplacement_sup(Sup(arbre), a_rajouter), Val(arbre));
 		}
 	}
-	/*
-	 la complexite ici O(L^2) car on une fonction recherche qui est appeler toujours avec la taille du mot -1 donc en premier temps
-	 on aura 2*L puis 2*(L-1) puis 2*(L-2) ...... 2*(L-(L-1)) donc on aura 2(L*(L-1)/2) =O(L^2).on pris la complexite de la fonction
-	 rechercher car c'est la fonction qui a une grande complexite par rapport aux autre comme prefix .. ect  
-	 */
-	public Noeud Suppression(Noeud arbre,String mot) {
+	public Noeud supp(Noeud arbre,String mot) {
+		if (mot.isEmpty()) {
+	        return arbre;
+	    }
 		if(EstVide(arbre)) {
-			 return arbre;
-			}else {
-				if(Recherche(arbre, mot)) {
-					char p=mot.charAt(0);
-					  if(Prefix(arbre, ""+p)==1) {
-						  if(Prefix(Sup(arbre), ""+p)==1) {
-							  return new Noeud(Rac(arbre), Inf(arbre), Eq(arbre), Suppression(Sup(arbre), mot), Val(arbre));
-						  }else if(Prefix(Inf(arbre), ""+p)==1) {
-							  return new Noeud(Rac(arbre), Suppression(Inf(arbre), mot), Eq(arbre),Sup(arbre), Val(arbre));
-						  }else {
-						  if((!EstVide(Inf(arbre))) && (!EstVide(Sup(arbre)))){
-							  return new Noeud(Rac(Inf(arbre)), Inf(Inf(arbre)), Eq(Inf(arbre)), bon_emplacement_sup(Sup(Inf(arbre)), Sup(arbre)), Val(Inf(arbre)));
-						  }else if(!EstVide(Inf(arbre))) {
-							  return new Noeud(Rac(Inf(arbre)), Inf(Inf(arbre)),Eq(Inf(arbre)),Sup(Inf(arbre)),Val(Inf(arbre)));
-						  }else if(!EstVide(Sup(arbre))) {
-							  return new Noeud(Rac(Sup(arbre)), Inf(Sup(arbre)),Eq(Sup(arbre)),Sup(Sup(arbre)),Val(Sup(arbre)));
-						  }else {
-							  return TH_Vide();
-						  }
-					  }
+			return null;
+		}else {
+			char p=mot.charAt(0);
+			  if(Prefix(arbre, ""+p)==1) {
+				  if(Prefix(Sup(arbre), ""+p)==1) {
+					  return new Noeud(Rac(arbre), Inf(arbre), Eq(arbre), supp(Sup(arbre), mot), Val(arbre));
+				  }else if(Prefix(Inf(arbre), ""+p)==1) {
+					  return new Noeud(Rac(arbre), supp(Inf(arbre), mot), Eq(arbre),Sup(arbre), Val(arbre));
+				  }else {
+				  if((!EstVide(Inf(arbre))) && (!EstVide(Sup(arbre)))){
+					  return new Noeud(Rac(Inf(arbre)), Inf(Inf(arbre)), Eq(Inf(arbre)), bon_emplacement_sup(Sup(Inf(arbre)), Sup(arbre)), Val(Inf(arbre)));
+				  }else if(!EstVide(Inf(arbre))) {
+					  return new Noeud(Rac(Inf(arbre)), Inf(Inf(arbre)),Eq(Inf(arbre)),Sup(Inf(arbre)),Val(Inf(arbre)));
+				  }else if(!EstVide(Sup(arbre))) {
+					  return new Noeud(Rac(Sup(arbre)), Inf(Sup(arbre)),Eq(Sup(arbre)),Sup(Sup(arbre)),Val(Sup(arbre)));
+				  }else {
+					  return TH_Vide();
+				  }
+			  }
+			  }else {
+				  if(mot.length()==1) {
+					  if(p<Rac(arbre)) {
+						  Noeud.incrementCompteur();
+						  return new Noeud(Rac(arbre),supp(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
+					  }else if(p>Rac(arbre)) {
+						  Noeud.incrementCompteur();
+						  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),supp(Sup(arbre),mot),Val(arbre));
 					  }else {
-						  if(mot.length()==1) {
-							  Noeud.incrementCompteur();
-							  if(p<Rac(arbre)) {
-								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
-							  }else if(p>Rac(arbre)) {
-								  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Suppression(Sup(arbre),mot),Val(arbre));
-							  }else {
-								  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Sup(arbre),false);
-							  }
-							  
-						  }else {
-							  Noeud.incrementCompteur();
-							  if(p<Rac(arbre)) {
-								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
-							  }else if(p>Rac(arbre)) {
-								  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Suppression(Sup(arbre),mot),Val(arbre));
-							  }else {
-								  return new Noeud(Rac(arbre),Inf(arbre),Suppression(Eq(arbre),mot.substring(1)),Sup(arbre),Val(arbre));
-							  }
-						  }
+						  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Sup(arbre),false);
 					  }
+					  
+				  }else {
+					  if(p<Rac(arbre)) {
+						  Noeud.incrementCompteur();
+						  return new Noeud(Rac(arbre),supp(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
+					  }else if(p>Rac(arbre)) {
+						  Noeud.incrementCompteur();
+						  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),supp(Sup(arbre),mot),Val(arbre));
+					  }else {
+						  return new Noeud(Rac(arbre),Inf(arbre),supp(Eq(arbre),mot.substring(1)),Sup(arbre),Val(arbre));
+					  }
+				  }
+			  }
+		}
+	}
+	
+	public Noeud Suppression(Noeud arbre,String mot) {
+				if(Recherche(arbre, mot)) {
+					return supp(arbre, mot);
 				}else {
 					return arbre;
 				}
 			  
-			}
+			
 	}
 	
 	public Noeud suppression_successif(List<String> mots, Noeud courant) {
@@ -474,11 +482,52 @@ public class Tries_Hybrides {
 		
 	}
 //---------------------------Question 3.8 ---------------------------------
+	/*
+	 cette fonction calcul la hauteur d'un noeud mais en prenant compte seulement les sous arbre gauche et droite.
+	 */
+	public int taille_g_d(Noeud arbre) {
+		if(EstVide(arbre)) {
+			return 0;
+		}else if(EstVide(Inf(arbre)) && EstVide(Sup(arbre))){
+			return 0;
+		}else if(!EstVide(Inf(arbre)) && !EstVide(Sup(arbre))) {
+			return 1+Math.max(taille_g_d(Inf(arbre)),taille_g_d(Sup(arbre)));
+		}
+		else {
+			return 1+taille_g_d(Inf(arbre))+taille_g_d(Sup(arbre));
+		}
+	}
+	/*
+	  Un arbre est considéré comme équilibré si la différence de hauteur entre ses sous-arbres gauche et droit est inférieure
+	  a une valeur qui est entre 1 et -1 tout en prenant compte l'arbre au milieu c'est a dire il doit respecte aussi cette contraint par exemple
+	  si je suis a la racine je verifier les sous arbre gauche et droit en calculant facteur d'equilibrage meme si je trouve entre 
+	  1 et -1 je dois verifier le noeud au milieu si son facteur d'equilibrage est entre -1 et 1 donc on soit suivre recurersivement
+	  ce processus, donc le seuil est de ±1. Cela signifie que si le facteur d'équilibre d'un nœud est supérieur à 1 
+	  en valeur absolue, l'arbre est considéré comme déséquilibré et une rotation doit être effectuée pour le rééquilibrer.
+	 */
+	public int facteur_equilibrage(Noeud arbre) {
+		if(EstVide(arbre)) {
+			return 0;
+		}else if(!EstVide(Inf(arbre)) && !EstVide(Sup(arbre))) {
+			return (taille_g_d(Inf(arbre)))-(taille_g_d(Sup(arbre)));
+		}
+		else if(EstVide(Inf(arbre)) && !EstVide(Sup(arbre))) {
+			return taille_g_d(Inf(arbre))-(taille_g_d(Sup(arbre))+1);
+		}
+		else {
+			return (1+taille_g_d(Inf(arbre)))-taille_g_d(Sup(arbre));
+		}
+		
+	}
+	
+	
 	public Noeud RG(Noeud arbre) {
-		return null;
+		Noeud inter=new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Inf(Sup(arbre)),Val(arbre));
+		return new Noeud(Rac(Sup(arbre)),inter,Eq(Sup(arbre)),Sup(Sup(arbre)),Val(Sup(arbre)));
 	}
 	public Noeud RD(Noeud arbre) {
-		return null;
+		Noeud inter=new Noeud(Rac(arbre),Sup(Inf(arbre)),Eq(arbre),Sup(arbre),Val(arbre));
+		return new Noeud(Rac(Inf(arbre)),Inf(Inf(arbre)),Eq(Inf(arbre)),inter,Val(Inf(arbre)));
 	}
 	public Noeud RGG(Noeud arbre) {
 		return null;
@@ -487,10 +536,50 @@ public class Tries_Hybrides {
 		return null;
 	}
 	public Noeud RDG(Noeud arbre) {
-		return null;
+		Noeud arbre1=new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),RD(Sup(arbre)),Val(arbre));
+		return RG(arbre1);
 	}
 	public Noeud RGD(Noeud arbre) {
-		return null;
+		Noeud arbre1=new Noeud(Rac(arbre),RG(Inf(arbre)),Eq(arbre),Sup(arbre),Val(arbre));
+		return RD(arbre1);
+	}
+	/*
+	 
+	 */
+	public Noeud equilibrage(Noeud arbre) {
+		if(EstVide(arbre) || (facteur_equilibrage(arbre)<2 && facteur_equilibrage(arbre)>-2)) {
+			if(facteur_equilibrage(Eq(arbre))<2 && facteur_equilibrage(Eq(arbre))>-2) {
+				return arbre;	
+			}else {
+				return new Noeud(Rac(arbre),Inf(arbre),equilibrage(Eq(arbre)),Sup(arbre),Val(arbre));
+			}
+			
+		}else if(facteur_equilibrage(arbre)==-2) {
+			if(facteur_equilibrage(Sup(arbre))==1) {
+				return RDG(new Noeud(Rac(arbre),Inf(arbre),equilibrage(Eq(arbre)),Sup(arbre),Val(arbre)));
+			}else {
+				return RG(new Noeud(Rac(arbre),Inf(arbre),equilibrage(Eq(arbre)),Sup(arbre),Val(arbre)));
+			}
+		}else if(facteur_equilibrage(arbre)==2) {
+			if(facteur_equilibrage(Inf(arbre))==-1) {
+					return RGD(new Noeud(Rac(arbre),Inf(arbre),equilibrage(Eq(arbre)),Sup(arbre),Val(arbre)));
+			}else {
+				return RD(new Noeud(Rac(arbre),Inf(arbre),equilibrage(Eq(arbre)),Sup(arbre),Val(arbre)));
+			}
+		}else {
+		return equilibrage(new Noeud(Rac(arbre),equilibrage(Inf(arbre)),equilibrage(Eq(arbre)),equilibrage(Sup(arbre)),Val(arbre)));
+		}
+	}
+	
+	public Noeud ajout_equilibrage(List<String> mots, Noeud courant) {
+	    if (mots.isEmpty()) {
+	        return courant; // Si la liste est vide, on retourne l'arbre construit
+	    }
+
+	    String mot = mots.get(0);
+	    mots.remove(0); // On supprime le premier element de la liste
+	    Noeud arbre = TH_Ajout(mot, courant);
+	    return equilibrage(ajout_equilibrage(mots, arbre));
 	}
 	
 	public static void main(String[] args)  {

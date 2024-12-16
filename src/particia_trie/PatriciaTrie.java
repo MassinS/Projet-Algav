@@ -42,18 +42,16 @@ public class PatriciaTrie {
 
 	    char firstChar = word.charAt(0);
 	    
-	    // Incrémenter pour la comparaison de recherche dans la map
-	    PatriciaTrieNode.incrementCompteur(); // Comparaison pour trouver le nœud correspondant au premier caractère
+	    
 	    PatriciaTrieNode child = node.children.get(firstChar);
 
 	    if (child != null) {
 	        // Comparaison pour trouver le préfixe commun
 	        String commonPrefix = findCommonPrefix(child.label, word);
 	     // Comparaison pour déterminer si le préfixe commun est plus court
-        	PatriciaTrieNode.incrementCompteur();
             
 	        if (commonPrefix.length() < child.label.length()) {
-	            
+	        	PatriciaTrieNode.incrementCompteur();
 	            // Scénario de fractionnement du nœud
 	            PatriciaTrieNode splitNode = new PatriciaTrieNode(commonPrefix);
 
@@ -136,7 +134,7 @@ public class PatriciaTrie {
 
 	    // Rechercher le nœud correspondant dans les enfants
 	    PatriciaTrieNode child = node.children.get(firstChar);
-	    PatriciaTrieNode.incrementCompteur(); // Incrémenter le compteur pour la comparaison
+	    
 		   
 	    if (child == null) {
 	        
