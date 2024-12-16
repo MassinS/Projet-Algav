@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.Hybrides.Noeud;
-
 public class PatriciaTrie {
 	/*
   1- Boucle principale et appels récursifs :
@@ -36,74 +34,66 @@ public class PatriciaTrie {
 
 	*/
 	
-	public  void insert(PatriciaTrieNode node, String word) {
-		 
-		if (word.isEmpty()) {
-		        node.isEndOfWord = true;
-		        return;
-		    }
-		
-		char firstChar = word.charAt(0);
-	    PatriciaTrieNode child = node.children.get(firstChar);
-	    
-	    
-	    if (child != null) {
-	        // Correspondance trouvée : appel récursif avec le nœud enfant et le reste du mot
-	    	
-	        String commonPrefix = findCommonPrefix(child.label, word);
-	        if (commonPrefix.length() < child.label.length()) {
-	            // Si le préfixe commun est plus court que le label du nœud
-	        
-	        	// Imaginons que j'ai déjà le mot "balltze" qui est insèré dans l'arbre 
-			    // Et ensuie je veux insèrer le mot "bal" et le prefixe commun est le mot "bal" donc on aura 
-			    // le noeud "bal" qu'est un mot  et son fils le reste de balltze : "ltze"  
-			    
-		    	
-	        	// On cree l'arbre avec le commonprefix= "bal"
-	        	PatriciaTrieNode splitNode = new PatriciaTrieNode(commonPrefix);
-	        	
-	        	// On ajoute le fils "ltze"
-	        	 splitNode.children.put(child.label.charAt(commonPrefix.length()), child);
-
-	            
-	        	 
-	        	 child.label = child.label.substring(commonPrefix.length());
-
-	        	 splitNode.isEndOfWord = false;
-	            
-	            node.children.put(firstChar, splitNode); 
-
-	         // On appelle récursivement le insert pour continuer l'insertion de reste de mot
-	         // ici c'est le mot vide qu'est un cas déjà traité au-dessus   
-	            
-	            insert(splitNode, word.substring(commonPrefix.length()) );
-	                                                                       
-	         
-	            
-	        } else {
-	        	// le cas où  le prefix commun est le meme de la label donc j'insere le reste du mot dans ce noeud
-	         insert(child, word.substring(commonPrefix.length()) );
-	        } 
-	        
-	    } else {
-	    	// Le cas où le premier caractère n'est pas trouvé dans l'arbre donc on doit le créé et insèrer tout le mot
-	    	PatriciaTrieNode newNode = new PatriciaTrieNode(word);
-	    	newNode.isEndOfWord = true;
-	    	node.children.put(firstChar, newNode);
+	public void insert(PatriciaTrieNode node, String word) {
+	    if (word.isEmpty()) {
+	        node.isEndOfWord = true;
+	        return;
 	    }
-	    
-	    
-	}
-	
 
+	    char firstChar = word.charAt(0);
+	    
+	    // Incrémenter pour la comparaison de recherche dans la map
+	    PatriciaTrieNode.incrementCompteur(); // Comparaison pour trouver le nœud correspondant au premier caractère
+	    PatriciaTrieNode child = node.children.get(firstChar);
+
+	    if (child != null) {
+	        // Comparaison pour trouver le préfixe commun
+	        String commonPrefix = findCommonPrefix(child.label, word);
+
+	        if (commonPrefix.length() < child.label.length()) {
+	            // Comparaison pour déterminer si le préfixe commun est plus court
+	        	PatriciaTrieNode.incrementCompteur();
+
+	            // Scénario de fractionnement du nœud
+	            PatriciaTrieNode splitNode = new PatriciaTrieNode(commonPrefix);
+
+	            // Ajouter le reste de l'ancien label comme enfant
+	            splitNode.children.put(child.label.charAt(commonPrefix.length()), child);
+	            child.label = child.label.substring(commonPrefix.length());
+
+	            splitNode.isEndOfWord = false;
+
+	            // Ajouter le nouveau nœud fractionné
+	            node.children.put(firstChar, splitNode);
+
+	            // Continuer l'insertion avec le reste du mot
+	            insert(splitNode, word.substring(commonPrefix.length()));
+	        } else {
+	            // Scénario où le préfixe commun est égal au label
+	            PatriciaTrieNode.incrementCompteur(); // Comparaison pour vérifier l'égalité
+	            insert(child, word.substring(commonPrefix.length()));
+	        }
+	    } else {
+	        // Scénario où le nœud enfant n'existe pas encore
+	    	PatriciaTrieNode.incrementCompteur(); // Comparaison pour vérifier l'absence de nœud correspondant
+	        PatriciaTrieNode newNode = new PatriciaTrieNode(word);
+	        newNode.isEndOfWord = true;
+	        node.children.put(firstChar, newNode);
+	    }
+	}
+
+    
+	
 	private  String findCommonPrefix(String str1, String str2) {
 	    int minLength = Math.min(str1.length(), str2.length());
 	    int i = 0;
 	    while (i < minLength && str1.charAt(i) == str2.charAt(i)) {
+	    	PatriciaTrieNode.incrementCompteur();
 	        i++;
 	    }
 	    return str1.substring(0, i);
 	}
+	
 	
 	
 	public void AfficherLesMots(PatriciaTrieNode node, String prefix) {
@@ -115,6 +105,7 @@ public class PatriciaTrie {
         }
     }
     
+	
 	
 	
 	public Integer ComptageMots(PatriciaTrieNode node) {
@@ -133,6 +124,7 @@ public class PatriciaTrie {
 		return i;
 		
 	}
+	
 	
 
 	
@@ -161,6 +153,7 @@ public class PatriciaTrie {
 
     
 	
+	
     public Integer Hauteur(PatriciaTrieNode node) {
 		
     	if (node == null || node.children.isEmpty()) {
@@ -177,45 +170,69 @@ public class PatriciaTrie {
     }
     
     
+    
     public PatriciaTrieNode Suppression(PatriciaTrieNode node, String word) {
-        
-    	 if (word.isEmpty()) {
+        if (node == null || word.isEmpty()) {
+            return null; // Cas de base : arbre vide ou mot vide
+        }
 
-    		 node.isEndOfWord = false;
-    		 if (node.children.isEmpty()) {
-                 return null;  
-             }
-             return node;
-             
- 	    }
-    	   
-    	 char firstChar = word.charAt(0);
- 	     PatriciaTrieNode child = node.children.get(firstChar);
+        // Étape 1 : Vérifier si le label du nœud courant correspond au début du mot
+        if (!word.startsWith(node.label)) {
+            return node; // Si le mot ne correspond pas au chemin de ce nœud, il n'existe pas dans l'arbre
+        }
 
- 	    if (child == null) {
-	        // Aucun chemin correspondant
-	        return node;
-	    }
- 	   String label = child.label;
- 	   if (word.startsWith(label)) { 
-	        // Le mot commence par le label, on continue avec le reste du mot
-	        return Suppression(child, word.substring(label.length()));
-	    }
- 	  return node;
-    	
+        // Si le mot est plus long que le label actuel, continuer récursivement dans les enfants
+        String remainingWord = word.substring(node.label.length());
+
+        if (remainingWord.isEmpty()) {
+            // Étape 2 : Cas où on atteint la fin du mot à supprimer
+            if (!node.children.isEmpty()) {
+                // Cas 1 : Le nœud a des enfants, on met seulement isEndOfWord à false
+                node.isEndOfWord = false;
+            } else {
+                // Cas 3 : Le nœud n'a pas d'enfants, on peut le supprimer en le retirant de son parent
+                return null;
+            }
+        } else {
+            // Étape 3 : Continuer la suppression dans les enfants
+            char nextChar = remainingWord.charAt(0);
+            PatriciaTrieNode child = node.children.get(nextChar);
+
+            if (child == null) {
+                return node; // Si l'enfant n'existe pas, le mot n'est pas dans l'arbre
+            }
+
+            // Appeler la suppression récursive sur l'enfant
+            PatriciaTrieNode newChild = Suppression(child, remainingWord);
+
+            if (newChild == null) {
+                // Si l'enfant a été supprimé, le retirer du parent
+                node.children.remove(nextChar);
+            } else if (newChild.children.size() == 1 ) {
+                // Cas 2 : L'enfant a un seul enfant et n'est pas une fin de mot
+                Map.Entry<Character, PatriciaTrieNode> entry = newChild.children.entrySet().iterator().next();
+
+                // Concaténer les labels
+                newChild.label += entry.getValue().label;
+
+                // Transférer les enfants de l'enfant unique
+                newChild.children = entry.getValue().children;
+            }
+        }
+
+        return node;
     }
     
     
-
     
-    
-    public Integer ProfondeurMoyenne(PatriciaTrieNode node) {
+      public Integer ProfondeurMoyenne(PatriciaTrieNode node) {
     	if(ComptageMots(node)==0) {
     		return 0;
     	}else {
     		return profondeurTotale(node,0)/ComptageMots(node);
         }
-    	}
+    	
+    }
     	
     
     
@@ -237,12 +254,11 @@ public class PatriciaTrie {
 		        );
 		    }
 	   }
-	    
 
-	    
 
 	    return profondeurTotale;
-	 		
+	 
+	    
    }
    
    
@@ -261,7 +277,7 @@ public class PatriciaTrie {
 		
 		
    }
-  
+   
    
    public List<String> ListeMots(PatriciaTrieNode Arbre) {
 	    List<String> mots = new ArrayList<>();
@@ -275,6 +291,7 @@ public class PatriciaTrie {
 	    }
 	}
 
+   
 	private void ListeMotsRecursive(PatriciaTrieNode Arbre, String prefix, List<String> mots) {
 	    if (Arbre.isEndOfWord) {
 	        mots.add(prefix + Arbre.label);
@@ -284,7 +301,6 @@ public class PatriciaTrie {
 	        ListeMotsRecursive(entry.getValue(), prefix + Arbre.label, mots);
 	    }
 	}
-	
 	
 	
 	public Integer Prefixe(PatriciaTrieNode node, String word) {
@@ -317,7 +333,6 @@ public class PatriciaTrie {
 	}
      
 	
-	
 	private int countWordsFromNode(PatriciaTrieNode node) {
 	    int count = 0;
 
@@ -334,7 +349,6 @@ public class PatriciaTrie {
 	    return count;
 	}
 
-	
 	
 	public PatriciaTrieNode FusionArbre ( PatriciaTrieNode Arbre1, PatriciaTrieNode Arbre2  ) {
 		
@@ -373,15 +387,9 @@ public class PatriciaTrie {
 				return Arbre3;
 		}
 		
-		
 	
 	}
     
-	
-	
-	
-	
-	
 	
 	
 	
@@ -391,16 +399,24 @@ public class PatriciaTrie {
 		        return Arbre1; // Si la liste est vide, on retourne l'arbre construit
 		    }
 
-		    String mot = Liste.get(0);
-		    Liste.remove(0); // On supprime le premier element de la liste
-		     insert(Arbre1,mot);
-		    return ajout_successif(Arbre1,Liste);
+		 for (String element : Liste) {
+			 insert(Arbre1, element);   
+			 }
+		 
+		 return Arbre1;	
 	
 	}
 	  
 	
+	
 	public PatriciaTrieNode Suppression_successif(PatriciaTrieNode Arbre1 , List<String> Liste   ) {
 	
+
+		 if (Liste.isEmpty()) {
+		        return Arbre1; // Si la liste est vide, on retourne l'arbre construit
+		    }
+		 
+		
 		 for (String element : Liste) {
 			 Suppression(Arbre1, element);   
 			 }
@@ -410,10 +426,6 @@ public class PatriciaTrie {
 	
 	
 	
-	public boolean isEmpty(PatriciaTrieNode Arbre1) {
-	    return Arbre1.label.isEmpty() && Arbre1.children.isEmpty();
-	}
-	 
 	
 	
 	

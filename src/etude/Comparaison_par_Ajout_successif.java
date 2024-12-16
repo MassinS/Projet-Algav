@@ -39,6 +39,7 @@ public class Comparaison_par_Ajout_successif {
 		 seriesPatricia.add(0,0);
 		 
 		 List<String> mots1;
+		 List<String> mots2;
 		 
 		
 		 // Créer un objet File pour le répertoire
@@ -56,44 +57,59 @@ public class Comparaison_par_Ajout_successif {
                 	try {
                 		
                 		Noeud hybride = new Noeud();
-                    	PatriciaTrieNode root = new PatriciaTrieNode("");
-                    
-                		
-                		
-        				mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
+                        
+                		mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
         				int y=mots1.size();
         		
         				
         				long startTimeHybride = System.nanoTime();
-                        hybride = tt.ajout_successif(mots1, hybride);
+                        
+        				hybride = tt.ajout_successif(mots1, hybride);
+                        
                         long endTimeHybride = System.nanoTime();
                         long durationHybride = endTimeHybride - startTimeHybride;
                         
                         seriesHybride.add( y, durationHybride / 1_000_000.0);
-                        
                       
-                       
-         				
-                        mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
-        				
-                        
-                        long startTimePatricia = System.nanoTime();
-                        
-                        root = trie.ajout_successif(root, mots1);
-                        
-                        
-                        long endTimePatricia = System.nanoTime();
-                        long durationPatricia = endTimePatricia - startTimePatricia;
-                        
-                        
-                        seriesPatricia.add( y, durationPatricia / 1_000_000.0);
-        		        
-        		        
+                          
+                      
         		     
         			} catch (IOException e) {
         				e.printStackTrace();
         			}
                 	
+                	
+                	try {
+                		
+                		mots2 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
+        				int y=mots2.size();
+        		
+        				PatriciaTrieNode root = new PatriciaTrieNode("");
+                        
+        				PatriciaTrieNode.resetCompteur();
+        				
+                        long startTimePatricia = System.nanoTime();
+                        
+                        
+                        root= trie.ajout_successif(root, mots2);
+                        
+                        
+                        long endTimePatricia = System.nanoTime();
+                        
+                        long durationPatricia = endTimePatricia - startTimePatricia;
+                        
+                        
+                        seriesPatricia.add( y, durationPatricia / 1_000_000.0);
+                        
+                         System.out.println("Nombre de comparaison : "+ PatriciaTrieNode.getCompteur());
+                         System.out.println("Profondeur de patricia : "+ trie.ProfondeurMoyenne(root) );
+                         System.out.println("Nombre de mots  : "+ trie.ComptageMots(root) );
+                         
+						
+					} catch (Exception e) {
+					
+					
+					}
                
                 	
                 	
@@ -109,16 +125,17 @@ public class Comparaison_par_Ajout_successif {
         
         // Ajouter les séries à une collection
         XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(seriesPatricia);
         dataset.addSeries(seriesHybride);
+        dataset.addSeries(seriesPatricia);
        
         
         
         // Créer le graphique
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "l'insertion dans la structure patricia et hybride", // Titre
+                "la construction de la structure patricia et hybride", // Titre
+                "Nombre de mots",
                 "Temps d'exécution (en millisecondes)", // Axe X
-                "Nombre de mots", // Axe Y
+                 // Axe Y
                 dataset // Données
         );
 
@@ -127,8 +144,8 @@ public class Comparaison_par_Ajout_successif {
         
         // La couleur Blue pour l'arbre Patricia.
         XYPlot plot = (XYPlot) chart.getPlot();
-        plot.getRenderer().setSeriesPaint(0, Color.BLUE); // Hybride
-        plot.getRenderer().setSeriesPaint(1, Color.RED); // Hybride
+        plot.getRenderer().setSeriesPaint(0, Color.RED); // Hybride
+        plot.getRenderer().setSeriesPaint(1, Color.BLUE); // Hybride
         
        
         

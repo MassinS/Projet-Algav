@@ -1,8 +1,11 @@
 package etude;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -31,119 +34,119 @@ public class Comparaison_par_Profondeur  {
 	     
 		 XYSeries seriesHybride = new XYSeries("Courbe d'arbre hybride");
 		 XYSeries seriesPatricia = new XYSeries("Courbe de Patricia Trie");
-        
+     
 		 seriesHybride.add(0,0);
 		 seriesPatricia.add(0,0);
 		 
 		 
-		 
 		 List<String> mots1;
+		 List<String> mots2;
 		 
 		 // Créer un objet File pour le répertoire
-     File dossier = new File(cheminRepertoire); 
+  File dossier = new File(cheminRepertoire); 
 
-     // Vérifier si c'est un répertoire valide
-     if (dossier.isDirectory()) {
-         // Lister tous les fichiers dans le répertoire
-         File[] fichiers = dossier.listFiles();
-          
-         // Vérifier si le répertoire contient des fichiers
-         if (fichiers != null) {
-             // Parcourir chaque fichier
-             for (File fichier : fichiers) {
-             	try {
-             		
-     				mots1 = Tries_Hybrides.lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
-     				int y=mots1.size();
-     				
-     				Noeud hybride = tt.ajout_successif(mots1, null);
-     				PatriciaTrieNode Patricia = trie.ajout_successif(null, mots1);
-                  
-     				  long startTimeHybride = System.nanoTime();
-                     tt.ProfondeurMoyenne(hybride);
-                     long endTimeHybride = System.nanoTime();
-                     long durationHybride = endTimeHybride - startTimeHybride;
-                     
-                     
-                     seriesHybride.add(durationHybride / 1_000_000.0, y);
+  // Vérifier si c'est un répertoire valide
+  if (dossier.isDirectory()) {
+      // Lister tous les fichiers dans le répertoire
+      File[] fichiers = dossier.listFiles();
+  
+      // Vérifier si le répertoire contient des fichiers
+      if (fichiers != null) {
+          // Parcourir chaque fichier
+          for (File fichier : fichiers) {
+          	try {
+          		
+          		mots1 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
+  				int y=mots1.size();
+  				
+  				Noeud hybride = new Noeud ();
+  				hybride = tt.ajout_successif(mots1, hybride);
+  				int ProfondeurArbre= tt.ProfondeurMoyenne(hybride); 
+              
+                seriesHybride.add( y, ProfondeurArbre);
+            
+  		     
+  			} catch (IOException e) {
+  				e.printStackTrace();
+  			}
+          	
+          	try {
+          		
+          		mots2 = lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
+  				int y=mots2.size();
+  		
+  				PatriciaTrieNode root = new PatriciaTrieNode("");
+  			    trie.ajout_successif(root, mots2);
+  			    int ProfondeurArbre= trie.ProfondeurMoyenne(root); 
+               
+                 seriesPatricia.add( y, ProfondeurArbre);
+                      	
+				} catch (Exception e) {
+				
+					e.printStackTrace();
+				}
+          	
+          }
+      } else {
+          System.out.println("Le répertoire est vide ou inaccessible.");
+      }
+  } else {
+      System.out.println("Le chemin spécifié n'est pas un répertoire valide.");
+  }
 
-                     
-                     long startTimePatricia = System.nanoTime();
-                     trie.ProfondeurMoyenne(Patricia);
-                     long endTimePatricia = System.nanoTime();
-                     long durationPatricia = endTimePatricia - startTimePatricia;
+  
+  // Ajouter les séries à une collection
+  XYSeriesCollection dataset = new XYSeriesCollection();
+  dataset.addSeries(seriesHybride);
+  dataset.addSeries(seriesPatricia);
+ 
+  
+  
+  
+  // Créer le graphique
+  JFreeChart chart = ChartFactory.createXYLineChart(
+          "La profondeur de l'arbre patricia et hybride", // Titre
+          "Nombre de mots",
+          "La profondeur de l'arbre ", // Axe X
+           // Axe Y
+          dataset // Données
+  );
+  
+  
+  // La couleur Blue pour l'arbre Patricia.
+  XYPlot plot = (XYPlot) chart.getPlot();
+  plot.getRenderer().setSeriesPaint(0, Color.RED); // Hybride
+  plot.getRenderer().setSeriesPaint(1, Color.BLUE); // Hybride
+  
+ 
+  
+  // Afficher le graphique dans une fenêtre Swing
+  JFrame frame = new JFrame("Le graphe de comparaison pour l'arbre patricia et hybride .");
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.add(new ChartPanel(chart));
+  frame.pack();
+  frame.setVisible(true);
 
-                     
-                     seriesPatricia.add(durationPatricia / 1_000_000.0, y);
-     		     
-                     
-     			} catch (IOException e) {
-     				e.printStackTrace();
-     			}
-             }
-         } else {
-             System.out.println("Le répertoire est vide ou inaccessible.");
-         }
-     } else {
-         System.out.println("Le chemin spécifié n'est pas un répertoire valide.");
-     }
-     
-     // Ajouter les séries à une collection
-     XYSeriesCollection dataset = new XYSeriesCollection();
-     dataset.addSeries(seriesPatricia);
-     
-     // Ajouter les séries à une collection
-     XYSeriesCollection dataset1 = new XYSeriesCollection();
-     dataset1.addSeries(seriesHybride);
-     
-     
-     
-     // Créer le graphique
-     JFreeChart chart = ChartFactory.createXYLineChart(
-             "la profondeur dans la structure patricia", // Titre
-             "Temps d'exécution (en millisecondes)", // Axe X
-             "Nombre de mots", // Axe Y
-             dataset // Données
-     );
-
-     
-     JFreeChart chart1 = ChartFactory.createXYLineChart(
-             "la profondeur dans la structure hybride", // Titre
-             "Temps d'exécution (en millisecondes)", // Axe X
-             "Nombre de mots", // Axe Y
-             dataset1 // Données
-     );
-     
-     
-     // La couleur Blue pour l'arbre Patricia.
-     XYPlot plot = (XYPlot) chart.getPlot();
-     plot.getRenderer().setSeriesPaint(0, Color.BLUE); 
-     
-     
-     // La couleur rouge pour l'arbre Hybride.
-     XYPlot plot1 = (XYPlot) chart1.getPlot();
-     plot1.getRenderer().setSeriesPaint(0, Color.RED);
-     
-     
-     // Afficher le graphique dans une fenêtre Swing
-     JFrame frame = new JFrame("Le graphe pour un arbre patricia.");
-     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-     frame.add(new ChartPanel(chart));
-     frame.pack();
-     frame.setVisible(true);
-
-     
-     // Afficher le graphique dans une fenêtre Swing
-     JFrame frame1 = new JFrame("Le graphe pour un arbre hybride.");
-     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-     frame1.add(new ChartPanel(chart1));
-     frame1.pack();
-     frame1.setVisible(true);
-       
-     
+  
+  
+  
 	}
 	
 	
+	public static List<String> lireEtDecomposerFichier(String nomFichier) throws IOException {
+	    List<String> mots = new ArrayList<>();
+	    try (BufferedReader br = new BufferedReader(new FileReader(nomFichier))) {
+	        String ligne;
+	        while ((ligne = br.readLine()) != null) {
+	            String[]motsLigne = ligne.split("\\s+"); // Separation par un ou plusieurs espaces
+	            for (String mot : motsLigne) {
+	                mots.add(mot);
+	            }
+	        }
+	    }
+	    return mots;
+}
+
 	
 	
 	

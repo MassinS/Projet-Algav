@@ -37,6 +37,7 @@ public class Tries_Hybrides {
 		  }
 		}
 	}
+	
 		
 	public Noeud TH_Vide() {
 		return null;
@@ -147,10 +148,12 @@ public class Tries_Hybrides {
 	        return courant; // Si la liste est vide, on retourne l'arbre construit
 	    }
 
-	    String mot = mots.get(0);
-	    mots.remove(0); // On supprime le premier element de la liste
-	    Noeud arbre = TH_Ajout(mot, courant);
-	    return ajout_successif(mots, arbre);
+	    for (String element : mots) {
+			courant = TH_Ajout(element,courant);   
+			 }
+	   
+	    return courant;
+	
 	}
 //---------------------------Question 2.6 ---------------------------------
 	/*
@@ -391,7 +394,14 @@ public class Tries_Hybrides {
 					  }
 					  }else {
 						  if(mot.length()==1) {
-							  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Sup(arbre),false);
+							  if(p<Rac(arbre)) {
+								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
+							  }else if(p>Rac(arbre)) {
+								  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Suppression(Sup(arbre),mot),Val(arbre));
+							  }else {
+								  return new Noeud(Rac(arbre),Inf(arbre),Eq(arbre),Sup(arbre),false);
+							  }
+							  
 						  }else {
 							  if(p<Rac(arbre)) {
 								  return new Noeud(Rac(arbre),Suppression(Inf(arbre),mot),Eq(arbre),Sup(arbre),Val(arbre));
@@ -408,16 +418,22 @@ public class Tries_Hybrides {
 			  
 			}
 	}
+	
 	public Noeud suppression_successif(List<String> mots, Noeud courant) {
 		if (mots.isEmpty()) {
 	        return courant; // Si la liste est vide, on retourne l'arbre construit
 	    }
-
-	    String mot = mots.get(0);
-	    mots.remove(0); // On supprime le premier element de la liste
-	    Noeud arbre = Suppression(courant,mot);
-	    return suppression_successif(mots, arbre);
+		
+		
+		 for (String element : mots) {
+			courant=  Suppression(courant, element);   
+			 }
+		
+	    return courant;
 	}
+	
+	
+	
 	/*
 	 la complexite de cette fonction est O(N*2*L) ou N represente la taille de la liste mots ou en d'autre terme le nombre de mots
 	 dans l'arbre 2 et L le nombre max de caractères d’une clé ou un mot

@@ -16,6 +16,24 @@ public class PatriciaTrieNode {
 	@JsonProperty("children")
 	Map<Character, PatriciaTrieNode> children;
 	
+	@JsonProperty("compteurComparaisons")
+	private static int compteurComparaisons = 0; 
+	
+	
+	
+	public static void resetCompteur() {
+		compteurComparaisons = 0; // Réinitialiser le compteur
+	}
+	
+	public static int getCompteur() {
+		return compteurComparaisons; // Récupérer le nombre de comparaisons
+	}
+	
+	public static void incrementCompteur() {
+		compteurComparaisons++; // Incrémenter le compteur
+	}
+	
+	
 	
 	public PatriciaTrieNode() {
         this.label = "";

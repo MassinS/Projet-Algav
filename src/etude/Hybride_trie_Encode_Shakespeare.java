@@ -27,6 +27,8 @@ public class Hybride_trie_Encode_Shakespeare {
               File[] fichiers = dossier.listFiles();
          // Vérifier si le répertoire contient des fichiers
             if (fichiers != null) {
+            	  long startTimeHybride = System.nanoTime();
+                  
             	  for (File fichier : fichiers) {
             		  try {
 					mots1 = PatriciaTrie.lireEtDecomposerFichier("Shakespeare/"+fichier.getName());
@@ -39,6 +41,9 @@ public class Hybride_trie_Encode_Shakespeare {
       				
             		  
             	  }
+            	  long endTimeHybride = System.nanoTime();
+                  
+            	  
             	  
             	  ObjectMapper mapper = new ObjectMapper();
    		       
@@ -51,8 +56,34 @@ public class Hybride_trie_Encode_Shakespeare {
 					e.printStackTrace();
 				}
     		      
+				
+            	//  Hybride.TH_Ajout("Salut", root);
+            	
+            	  long durationHybride = endTimeHybride - startTimeHybride;
+                  
+            	  long StartTimeAjout   = System.nanoTime();
+              	  Hybride.TH_Ajout("salut", root);
+              	  long EndTimeAjout   = System.nanoTime();
+            	  long durationAjout = EndTimeAjout - StartTimeAjout;
+              	  
             	  
+            	  long StartTimeHauteur   = System.nanoTime();
+              	  Hybride.Hauteur(root);
+              	  long EndTimeHauteur  = System.nanoTime();
+            	  long durationHauteur = EndTimeHauteur - StartTimeHauteur;
+              	  
             	  
+            	  System.out.println("Ajout total de Sheakspeare " + durationHybride / 1_000_000.0 + " ms");
+              	  System.out.println("Ajout de mot salut : " + durationAjout/ 1_000_000.0 + " ms");
+              	  System.out.println("L'hauteur : " + durationHauteur/ 1_000_000.0 + " ms");
+                 
+              	  System.out.println(Hybride.Hauteur(root));
+              	  System.out.println(Hybride.ProfondeurMoyenne(root) );
+                      
+                
+                  
+					
+					
             
             }
         
