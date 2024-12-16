@@ -39,10 +39,12 @@ public class Main {
 		
 		trie.ajout_successif(root1, maListe);
 	    
-		root1=trie.Suppression_successif(root1, maListe);
+		// root1=trie.Suppression_successif(root1, maListe);
 	    
-		trie.AfficherLesMots(root1, "");
+		// trie.AfficherLesMots(root1, "");
 		System.out.println(trie.ComptageMots(root1));
+	     
+		System.out.println(trie.Prefixe(root1, "gen") );
 	     
 	    
 		        

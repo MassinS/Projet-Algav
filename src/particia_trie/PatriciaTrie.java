@@ -199,18 +199,18 @@ public class PatriciaTrie {
             // Étape 3 : Continuer la suppression dans les enfants
             char nextChar = remainingWord.charAt(0);
             PatriciaTrieNode child = node.children.get(nextChar);
-            PatriciaTrieNode.incrementCompteur();
+           
             if (child == null) {
                 return node; // Si l'enfant n'existe pas, le mot n'est pas dans l'arbre
             }
 
             // Appeler la suppression récursive sur l'enfant
             PatriciaTrieNode newChild = Suppression(child, remainingWord);
-            PatriciaTrieNode.incrementCompteur();
+           
             if (newChild == null) {
                 // Si l'enfant a été supprimé, le retirer du parent
                 node.children.remove(nextChar);
-            } else PatriciaTrieNode.incrementCompteur();
+            } else 
             	if (newChild.children.size() == 1 ) {
                 // Cas 2 : L'enfant a un seul enfant et n'est pas une fin de mot
                 Map.Entry<Character, PatriciaTrieNode> entry = newChild.children.entrySet().iterator().next();
@@ -222,7 +222,7 @@ public class PatriciaTrie {
                 newChild.children = entry.getValue().children;
             }
         }
-
+   
         return node;
     }
     
@@ -332,27 +332,10 @@ public class PatriciaTrie {
 	    }
 
 	    // Une fois arrivé au nœud correspondant, compter les mots à partir de ce nœud
-	    return countWordsFromNode(currentNode);
+	    return ComptageMots(currentNode);
 	}
      
-	
-	private int countWordsFromNode(PatriciaTrieNode node) {
-	    int count = 0;
 
-	    // Si ce nœud marque la fin d'un mot, on incrémente le compteur
-	    if (node.isEndOfWord) {
-	        count++;
-	    }
-
-	    // Parcourir récursivement tous les enfants
-	    for (PatriciaTrieNode child : node.children.values()) {
-	        count += countWordsFromNode(child);
-	    }
-
-	    return count;
-	}
-
-	
 	public PatriciaTrieNode FusionArbre ( PatriciaTrieNode Arbre1, PatriciaTrieNode Arbre2  ) {
 		
 		if ( Arbre1== null ) {
